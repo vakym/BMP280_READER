@@ -1,28 +1,23 @@
 import smbus
 from Registers import REGISTER
 
-BUS_NUMBER = 0
-DEVICE_ADDRESS = 0
-BMP280_CHIP_ID = 0x58
-configure = False
-bus = None
-def config(bus_number, device_address):
-    BUS_NUMBER = bus_number
-    DEVICE_ADDRESS = device_address
-    configure = True
-    
+class BMP280:
+    _bus = None
+    _bmp280ChipId = 0x58
+    def __init__(self, bus_number, device_address):
+        self._bus_number = bus_number
+        self._device_address = device_address
+  
+    def init(self):
+        if __bus:
+            self.close()
+        __bus = smbus.SMBus(self._bus_number)
+        chipId = __bus.read_byte_data(self._device_address, REGISTER.BMP280_REGISTER_CHIPID)
+        if chipId != self._bmp280ChipId:
+            raise Exception('Not supported chip')
+        __bus.write_byte_data(self._device_address, REGISTER.BMP280_REGISTER_CONTROL, 0xFF)
+        __bus.write_byte_data(self._device_address, REGISTER.BMP280_REGISTER_CONFIG, 0x14)
 
-def init():
-    if not configure:
-        raise Exception('Not configured')
-    if bus:
-        close()
-    bus = smbus.SMBus(BUS_NUMBER)
-    chipId = bus.read_byte_data(DEVICE_ADDRESS, REGISTER.BMP280_REGISTER_CHIPID)
-    if chipId != BMP280_CHIP_ID:
-        raise Exception('Not supported chip')
-    bus.write_byte_data(DEVICE_ADDRESS, REGISTER.BMP280_REGISTER_CONTROL, 0xFF)
-    bus.write_byte_data(DEVICE_ADDRESS, REGISTER.BMP280_REGISTER_CONFIG, 0x14)
-
-def close():
-    bus.close()
+    def close(self):
+        if self._bus:
+            self._bus.close()

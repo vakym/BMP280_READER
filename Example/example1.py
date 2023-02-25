@@ -1,6 +1,6 @@
-from BMP280 import BMP280
+from BMP280.BMP280 import BMP280
 
 if __name__ == "__main__":
-    BMP280.config(1, 0X77)
-    BMP280.init()
-    BMP280.close()
+    sensor = BMP280(1, 0x77)
+    sensor.init()
+    sensor.close()
